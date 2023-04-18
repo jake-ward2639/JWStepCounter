@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +49,8 @@ public class HomeFragment extends Fragment {
     private int currentStepCount;
     private int oldStepCount;
     private String currentDate;
+
+    private CircularProgressBar stepCountProgressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +91,12 @@ public class HomeFragment extends Fragment {
         // Initialize the TextView that will display the step count
         stepCountTextView = view.findViewById(R.id.stepCountTextView);
         stepCountTextView.setText(String.format("Step count: %d", currentStepCount));
+
+        // Initialize the Progressbar and set progress
+        CircularProgressBar circularProgressBar = view.findViewById(R.id.circularProgressBar);
+        int maxProgress = sharedPref.getInt("maxProgress", 200);
+        circularProgressBar.setProgressMax((float) maxProgress);
+        circularProgressBar.setProgressWithAnimation((float) currentStepCount, 1000L);
 
         return view;
     }
