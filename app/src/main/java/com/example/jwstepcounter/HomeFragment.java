@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
         stepCountTextView.setText(String.format("Step count: %d", currentStepCount));
 
         // Initialize the Progressbar and set progress
-        CircularProgressBar stepCountProgressBar = view.findViewById(R.id.circularProgressBar);
+        stepCountProgressBar = view.findViewById(R.id.circularProgressBar);
         int maxProgress = sharedPref.getInt("maxProgress", 200);
         stepCountProgressBar.setProgressMax((float) maxProgress);
         stepCountProgressBar.setProgressWithAnimation((float) currentStepCount, 1000L);
@@ -130,9 +130,6 @@ public class HomeFragment extends Fragment {
                 // Save the step count and update the TextView
                 sharedPref.edit().putInt("currentStepCount", currentDayStepCount).apply();
                 stepCountTextView.setText(String.format("Step count: %d", currentDayStepCount));
-
-                int maxProgress = sharedPref.getInt("maxProgress", 200);
-                stepCountProgressBar.setProgressMax((float) maxProgress);
                 stepCountProgressBar.setProgressWithAnimation((float) currentDayStepCount, 1000L);
             }
         }
