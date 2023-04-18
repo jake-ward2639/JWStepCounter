@@ -1,26 +1,34 @@
 package com.example.jwstepcounter;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -52,9 +60,8 @@ public class HomeFragment extends Fragment {
 
             // Permission is not granted
             // Request the permission
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACTIVITY_RECOGNITION},
-                    400);
+            // Request the permission
+            requestPermissionLauncher.launch(new String[]{Manifest.permission.ACTIVITY_RECOGNITION});
         }
 
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -130,10 +137,28 @@ public class HomeFragment extends Fragment {
         sensorManager.unregisterListener(sensorEventListener);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        sensorManager.unregisterListener(sensorEventListener);
-    }
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissions -> {
+                boolean isAllGranted = true;
+                for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                    if (!entry.getValue()) {
+                        isAllGranted = false;
+                        break;
+                    }
+                }
+
+                if (!isAllGranted) {
+                    Snackbar.make(requireView(), "Permissions are required to use this app", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Settings", view -> {
+                                // Open app settings
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.setData(Uri.fromParts("package", requireContext().getPackageName(), null));
+                                startActivity(intent);
+                            })
+                            .show();
+                }
+            }
+    );
 
 }
