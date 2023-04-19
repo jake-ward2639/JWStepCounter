@@ -63,7 +63,6 @@ public class HomeFragment extends Fragment {
 
             // Permission is not granted
             // Request the permission
-            // Request the permission
             requestPermissionLauncher.launch(new String[]{Manifest.permission.ACTIVITY_RECOGNITION});
         }
 
@@ -95,7 +94,7 @@ public class HomeFragment extends Fragment {
 
         // Initialize the Progressbar and set progress
         stepCountProgressBar = view.findViewById(R.id.circularProgressBar);
-        int maxProgress = sharedPref.getInt("maxProgress", 200);
+        int maxProgress = sharedPref.getInt("step_goal", 200);
         stepCountProgressBar.setProgressMax((float) maxProgress);
         stepCountProgressBar.setProgressWithAnimation((float) currentStepCount, 1000L);
 
