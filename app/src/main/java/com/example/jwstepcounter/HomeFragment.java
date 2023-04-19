@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
             // Save the old step count and update the current date
             sharedPref.edit()
                     .putInt("oldStepCount", oldStepCount + currentStepCount)
+                    .putInt("currentStepCount", 0)
                     .putString("currentDate", todayDate)
                     .apply();
             oldStepCount = oldStepCount + currentStepCount;
