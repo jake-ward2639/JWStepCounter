@@ -21,7 +21,7 @@ public class SettingsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.settings_container, new displaySettingsFragment())
+                .replace(R.id.settings_container, new DisplaySettingsFragment())
                 .commit();
 
         return rootView;
