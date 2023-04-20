@@ -3,6 +3,7 @@ package com.example.jwstepcounter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -11,10 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
     private SharedPreferences sharedPref;
@@ -32,6 +38,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initialize the database helper
         dbHelper = new DatabaseHelper(getActivity());
         db = dbHelper.getWritableDatabase();
     }
@@ -53,13 +60,12 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        //TODO display database contents
+        displayDatabaseContents(view);
 
         saveDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Add new contents to the table
                 currentStepCount = sharedPref.getInt("currentStepCount", 0);
                 currentDate = sharedPref.getString("currentDate", "");
 
@@ -68,19 +74,39 @@ public class HistoryFragment extends Fragment {
                 values.put(DatabaseHelper.COLUMN_STEP_COUNT, currentStepCount);
 
                 db.insert(DatabaseHelper.TABLE_NAME, null, values);
-                //TODO display database contents
+                displayDatabaseContents(view);
             }
         });
 
         clearHistoryButton.setOnClickListener(new View.OnClickListener() {
+            //Clear contents of the table
             @Override
             public void onClick(View v) {
 
                 db.delete(DatabaseHelper.TABLE_NAME, null, null);
-                //TODO display database contents
+                displayDatabaseContents(view);
             }
         });
 
+    }
+
+    private void displayDatabaseContents(View view) {
+        // Retrieve data from the database
+        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME, null, null, null, null, null, null);
+        ArrayList<String> dataList = new ArrayList<String>();
+        if (cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE));
+                int stepCount = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STEP_COUNT));
+                dataList.add(0, date + " - " + stepCount);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        // Display data in the ListView
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, dataList);
+        ListView listView = view.findViewById(R.id.historyListView);
+        listView.setAdapter(adapter);
     }
 
     @Override

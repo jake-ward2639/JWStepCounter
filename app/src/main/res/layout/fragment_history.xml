@@ -23,19 +23,20 @@
             android:id="@+id/ClearHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/clearhistory"
+            android:text="@string/clear_history"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/LogData" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyRecyclerView"
-            android:layout_width="409dp"
-            android:layout_height="681dp"
-            app:layout_constraintBottom_toTopOf="@+id/ClearHistory"
+        <ListView
+            android:id="@+id/historyListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:transcriptMode="alwaysScroll"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/ClearHistory"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
