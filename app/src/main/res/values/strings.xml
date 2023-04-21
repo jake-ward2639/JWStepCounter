@@ -3,8 +3,6 @@
     <string name="history">History</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="log_data">Log Data</string>
     <string name="clear_history">Clear History</string>
 </resources>
