@@ -3,7 +3,10 @@ package com.example.jwstepcounter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
@@ -47,6 +50,15 @@ public class DisplaySettingsFragment extends PreferenceFragmentCompat {
                 sharedPref.edit().putInt("step_goal", stepGoal).apply();
 
                 return true;
+            }
+        });
+
+        // Get the EditTextPreference and set the input type
+        androidx.preference.EditTextPreference editTextPreference = findPreference("step_goal");
+        editTextPreference.setOnBindEditTextListener(new androidx.preference.EditTextPreference.OnBindEditTextListener() {
+            @Override
+            public void onBindEditText(@NonNull EditText editText) {
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
             }
         });
     }
